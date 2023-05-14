@@ -4,17 +4,21 @@ import uuid
 from datetime import datetime
 from models import storage
 
+import uuid
+from datetime import datetime
+from models import storage
+
 
 class BaseModel:
 
-    """attributes and methods for the class"""
+    """Class from which all other classes will inherit"""
 
     def __init__(self, *args, **kwargs):
-        """initialize variables and methods
+        """Initializes instance attributes
 
         Args:
-            - *args:arguments
-            - **kwargs:key-values arguments
+            - *args: list of arguments
+            - **kwargs: dict of key-values arguments
         """
 
         if kwargs is not None and kwargs != {}:
@@ -29,9 +33,9 @@ class BaseModel:
                     self.__dict__[key] = kwargs[key]
         else:
             self.id = str(uuid.uuid4())
-            self.created_at = datetime.datetime.now()
-            self.updated_at = datetime.datetime.now()
-            models.storage.new(self)
+            self.created_at = datetime.now()
+            self.updated_at = datetime.now()
+            storage.new(self)
 
     def __str__(self):
         """Returns official string representation"""
@@ -40,13 +44,13 @@ class BaseModel:
             format(type(self).__name__, self.id, self.__dict__)
 
     def save(self):
-        """method that updates the public instance attribute updated_at with the current datetime"""
+        """updates the public instance attribute updated_at"""
 
         self.updated_at = datetime.now()
         storage.save()
 
     def to_dict(self):
-        """keys/values of __dict__"""
+        """returns a dictionary containing all keys/values of __dict__"""
 
         my_dict = self.__dict__.copy()
         my_dict["__class__"] = type(self).__name__
